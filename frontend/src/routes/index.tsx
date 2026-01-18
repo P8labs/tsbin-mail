@@ -13,7 +13,6 @@ import { generate } from "random-words";
 import { Footer } from "~/components/core/footer";
 import { Navbar } from "~/components/core/navbar";
 import { appwriteConfig, Mail, tablesDB } from "~/lib/appwrite";
-import { API_URL } from "~/lib/constants";
 import { makeCustomAddress } from "~/lib/email";
 import { createExpiry } from "~/lib/utils";
 
