@@ -123,13 +123,11 @@ export default component$(() => {
         try {
           const mailboxes = JSON.parse(stored);
           const now = new Date();
-          // Filter out expired mailboxes
           const validMailboxes = mailboxes.filter((m: any) => {
             const expiresAt = new Date(m.expiresAt);
             return expiresAt > now;
           });
           savedMailboxes.value = validMailboxes;
-          // Save back the filtered list
           localStorage.setItem(
             "poopmail_mailboxes",
             JSON.stringify(validMailboxes),
@@ -146,8 +144,6 @@ export default component$(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("poopmail_mailboxes");
       const mailboxes = stored ? JSON.parse(stored) : [];
-
-      // Check if mailbox already exists
       const exists = mailboxes.some((m: any) => m.address === address);
       if (!exists) {
         mailboxes.push({ address, expiresAt });
@@ -228,7 +224,7 @@ export default component$(() => {
           </div>
 
           {savedMailboxes.value.length > 0 && (
-            <div class="flex w-full flex-col rounded border-2 bg-[#1111]/80 p-4">
+            <div class="flex w-full min-w-xl flex-col rounded border-2 bg-[#1111]/80 p-4">
               <h3 class="mb-3 text-lg font-semibold">Your Active Mailboxes</h3>
               <div class="space-y-2">
                 {savedMailboxes.value.map((mailbox, index) => (
