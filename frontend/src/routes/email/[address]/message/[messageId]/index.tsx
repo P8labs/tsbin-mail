@@ -1,22 +1,32 @@
 import { component$ } from "@builder.io/qwik";
-import { routeLoader$, useLocation, Link } from "@builder.io/qwik-city";
-import { appwriteConfig, Query, tablesDB } from "~/lib/appwrite";
+import {
+  routeLoader$,
+  useLocation,
+  Link,
+  DocumentHead,
+} from "@builder.io/qwik-city";
+import { appwriteConfig, tablesDB } from "~/lib/appwrite";
 import { Navbar } from "~/components/core/navbar";
 import { Footer } from "~/components/core/footer";
 
 export const useMessage = routeLoader$(async (req) => {
-  const response = await tablesDB.getRow({
-    databaseId: appwriteConfig.db,
-    tableId: appwriteConfig.mails,
-    rowId: req.params.messageId,
-    queries: [
-      Query.greaterThan("expiresAt", new Date().toISOString()),
-      Query.limit(1),
-    ],
-  });
+  try {
+    const response = await tablesDB.getRow({
+      databaseId: appwriteConfig.db,
+      tableId: appwriteConfig.messages,
+      rowId: req.params.messageId,
+    });
 
-  const data = response.rows[0];
-  return data;
+    const data = response;
+    return { success: true, data, error: null };
+  } catch (error: any) {
+    console.error("Error loading message:", error);
+    return {
+      success: false,
+      data: null,
+      error: error.message || "Failed to load message",
+    };
+  }
 });
 
 export default component$(() => {
@@ -43,35 +53,49 @@ export default component$(() => {
           </Link>
         </div>
 
-        {message.value && (
+        {message.value?.error && (
+          <div class="min-w-xl rounded border-2 border-red-500 bg-[#1111]/80 p-4 text-center">
+            <p class="text-lg text-red-500">Error loading message</p>
+            <p class="mt-2 text-sm">{message.value.error}</p>
+            <Link
+              href={`/email/${loc.params.address}`}
+              class="mt-4 inline-block border-2 px-4 py-2 hover:bg-[#2222]/50"
+            >
+              Back to Mailbox
+            </Link>
+          </div>
+        )}
+
+        {message.value?.success && message.value.data && (
           <div class="flex flex-col space-y-4">
             <div class="rounded border-2 bg-[#1111]/80 p-4">
               <h1 class="mb-4 text-2xl font-bold wrap-break-word">
-                {message.value.subject || "(No Subject)"}
+                {message.value.data.subject || "(No Subject)"}
               </h1>
 
               <div class="mb-4 space-y-2 border-b-2 pb-4">
                 <div class="grid grid-cols-1 gap-2">
                   <p class="break-all">
                     <span class="font-semibold">From:</span>{" "}
-                    {message.value.from}
+                    {message.value.data.from}
                   </p>
                   <p class="break-all">
-                    <span class="font-semibold">To:</span> {message.value.to}
+                    <span class="font-semibold">To:</span>{" "}
+                    {message.value.data.to}
                   </p>
                   <p>
                     <span class="font-semibold">Date:</span>{" "}
-                    {formatDate(message.value.$createdAt)}
+                    {formatDate(message.value.data.$createdAt)}
                   </p>
                 </div>
               </div>
 
               <div class="border-2 bg-white p-4 text-black">
-                {message.value.html ? (
-                  <div dangerouslySetInnerHTML={message.value.html} />
-                ) : message.value.text ? (
+                {message.value.data.html ? (
+                  <div dangerouslySetInnerHTML={message.value.data.html} />
+                ) : message.value.data.text ? (
                   <pre class="font-sans whitespace-pre-wrap">
-                    {message.value.text}
+                    {message.value.data.text}
                   </pre>
                 ) : (
                   <p class="opacity-70">No message content available.</p>
@@ -88,7 +112,7 @@ export default component$(() => {
           </div>
         )}
 
-        {!message.value && !loc.isNavigating && (
+        {message.value?.success && !message.value.data && !loc.isNavigating && (
           <div class="rounded border-2 bg-[#1111]/80 p-4 text-center">
             <p class="text-lg">Message not found or has expired.</p>
             <Link
@@ -104,3 +128,13 @@ export default component$(() => {
     </div>
   );
 });
+
+export const head: DocumentHead = {
+  title: "Poopmail",
+  meta: [
+    {
+      name: "description",
+      content: "A temp mail generator.",
+    },
+  ],
+};

@@ -3,5 +3,7 @@ ignoredBuiltDependencies:
 
 onlyBuiltDependencies:
   - '@parcel/watcher'
+  - deasync
   - esbuild
   - less
+  - vercel
