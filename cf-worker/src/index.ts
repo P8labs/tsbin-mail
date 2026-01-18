@@ -1,13 +1,13 @@
 import * as PostalMime from 'postal-mime';
 
 interface Env {
-	APPWRITE_ENDPOINT: string; // e.g. https://cloud.appwrite.io/v1
+	APPWRITE_ENDPOINT: string;
 	APPWRITE_PROJECT: string;
 	APPWRITE_API_KEY: string;
 
-	APPWRITE_DB: string; // 696c6ffc0001edc93922
-	APPWRITE_MAILS: string; // mails
-	APPWRITE_MESSAGES: string; // messages
+	APPWRITE_DB: string;
+	APPWRITE_MAILS: string;
+	APPWRITE_MESSAGES: string;
 }
 
 export default {
