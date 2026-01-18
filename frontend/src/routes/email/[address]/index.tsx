@@ -1,4 +1,4 @@
-import { component$, useTask$ } from "@builder.io/qwik";
+import { component$, useVisibleTask$ } from "@builder.io/qwik";
 import {
   routeLoader$,
   useLocation,
@@ -48,7 +48,7 @@ export default component$(() => {
   const loc = useLocation();
   const mailbox = useMailBox();
 
-  useTask$(({ track }) => {
+  useVisibleTask$(({ track }) => {
     track(() => mailbox.value);
 
     if (

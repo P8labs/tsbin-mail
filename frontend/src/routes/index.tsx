@@ -1,4 +1,4 @@
-import { $, component$, useSignal, useTask$ } from "@builder.io/qwik";
+import { $, component$, useSignal, useVisibleTask$ } from "@builder.io/qwik";
 import {
   routeAction$,
   zod$,
@@ -115,7 +115,8 @@ export default component$(() => {
     Array<{ address: string; expiresAt: string }>
   >([]);
 
-  useTask$(() => {
+  // eslint-disable-next-line qwik/no-use-visible-task
+  useVisibleTask$(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("poopmail_mailboxes");
       if (stored) {
