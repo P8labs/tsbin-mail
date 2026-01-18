@@ -29,7 +29,14 @@
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
-	"vars": { "APPWRITE_INGEST_URL": "https://696c96740038abe0e033.appwrite.network" },
+	"vars": {
+		"APPWRITE_ENDPOINT": "https://sgp.cloud.appwrite.io",
+		"APPWRITE_PROJECT": "696c6eec0035a8a2b916",
+		"APPWRITE_DB": "696c6ffc0001edc93922",
+		"APPWRITE_MAILS": "mails",
+		"APPWRITE_MESSAGES": "messages",
+	},
+
 	/**
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/

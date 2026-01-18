@@ -1,17 +1,22 @@
 import * as PostalMime from 'postal-mime';
 
 interface Env {
-	INGEST_SECRET: string;
-	APPWRITE_INGEST_URL: string;
+	APPWRITE_ENDPOINT: string; // e.g. https://cloud.appwrite.io/v1
+	APPWRITE_PROJECT: string;
+	APPWRITE_API_KEY: string;
+
+	APPWRITE_DB: string; // 696c6ffc0001edc93922
+	APPWRITE_MAILS: string; // mails
+	APPWRITE_MESSAGES: string; // messages
 }
 
 export default {
 	async email(message, env, ctx) {
 		try {
-			const to = message.to;
+			const to = message.to.toLowerCase();
 			const from = message.from;
 
-			if (!to.toLowerCase().endsWith('@mail.tsbin.tech')) {
+			if (!to || !to.endsWith('@mail.tsbin.tech')) {
 				console.log('Ignoring non-temp domain mail:', to);
 				return;
 			}
@@ -20,9 +25,15 @@ export default {
 			const rawEmail = new Response(message.raw);
 			const email = await parser.parse(await rawEmail.arrayBuffer());
 
-			const subject = email.subject;
-			const text = email.text;
-			const html = email.html;
+			const subject = email.subject || '(No Subject)';
+			const text = email.text || '';
+			const html = email.html || '';
+
+			const headers = {
+				'Content-Type': 'application/json',
+				'X-Appwrite-Project': env.APPWRITE_PROJECT,
+				'X-Appwrite-Key': env.APPWRITE_API_KEY,
+			};
 
 			const payload = {
 				to,
@@ -32,20 +43,61 @@ export default {
 				html,
 			};
 
-			const res = await fetch(env.APPWRITE_INGEST_URL, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					Authorization: `Bearer ${env.INGEST_SECRET}`,
-				},
-				body: JSON.stringify(payload),
+			const queries = [
+				q({ method: 'equal', column: 'address', values: [to] }),
+				q({ method: 'greaterThan', column: 'expiresAt', values: [new Date().toISOString()] }),
+				q({ method: 'limit', values: [1] }),
+			];
+
+			const url =
+				`${env.APPWRITE_ENDPOINT}/v1/tablesdb/${env.APPWRITE_DB}` +
+				`/tables/${env.APPWRITE_MAILS}/rows` +
+				`?queries[]=${queries.join('&queries[]=')}`;
+
+			const lookup = await fetch(url, {
+				headers,
 			});
 
-			if (!res.ok) {
-				console.error('Failed to forward mail:', await res.text());
+			if (!lookup.ok) {
+				console.error('Mailbox lookup failed:', await lookup.text());
+				return;
+			}
+
+			const data: any = await lookup.json();
+
+			if (!data.rows || data.rows.length === 0) {
+				console.log('Dropping mail for unknown/expired address:', to);
+				return;
+			}
+
+			const mailbox = data.rows[0];
+
+			const create = await fetch(`${env.APPWRITE_ENDPOINT}/v1/tablesdb/${env.APPWRITE_DB}/tables/${env.APPWRITE_MESSAGES}/rows`, {
+				method: 'POST',
+				headers,
+				body: JSON.stringify({
+					rowId: 'unique()',
+					data: {
+						mailId: mailbox.$id,
+						to,
+						from: from || 'unknown',
+						subject,
+						text,
+						html,
+						expiresAt: mailbox.expiresAt,
+					},
+				}),
+			});
+
+			if (!create.ok) {
+				console.error('Failed to store message:', await create.text());
 			}
 		} catch (err) {
 			console.error('Worker email error:', err);
 		}
 	},
 } satisfies ExportedHandler<Env>;
+
+function q(obj: unknown) {
+	return encodeURIComponent(JSON.stringify(obj));
+}
