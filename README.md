@@ -1,4 +1,4 @@
-# Poopmail
+![Poopmail Banner](frontend/public/banner.png)
 
 A temporary email service that allows user to create disposible email addresses and recieve emails without registration.
 

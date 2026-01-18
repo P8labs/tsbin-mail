@@ -170,9 +170,9 @@ export default component$(() => {
   return (
     <div class="flex min-h-screen w-full flex-col">
       <Navbar />
-      <section class="mx-auto flex max-w-xl flex-1 flex-col items-center justify-center px-4">
+      <section class="mx-auto flex min-w-xl flex-1 flex-col items-center justify-center px-4">
         <div class="flex w-full flex-col space-y-4">
-          <div class="flex flex-col rounded border-2 bg-[#1111]/80 p-4">
+          <div class="flex min-w-xl flex-col rounded border-2 bg-[#1111]/80 p-4">
             <div>
               <h3>Your Temporary Email Address</h3>
             </div>
@@ -224,7 +224,7 @@ export default component$(() => {
           </div>
 
           {savedMailboxes.value.length > 0 && (
-            <div class="flex w-full min-w-xl flex-col rounded border-2 bg-[#1111]/80 p-4">
+            <div class="flex min-w-xl flex-col rounded border-2 bg-[#1111]/80 p-4">
               <h3 class="mb-3 text-lg font-semibold">Your Active Mailboxes</h3>
               <div class="space-y-2">
                 {savedMailboxes.value.map((mailbox, index) => (
