@@ -8,6 +8,7 @@ export const Navbar = component$(() => {
         Poopmail
       </a>
       <a
+        target="_blank"
         class="flex items-start space-x-1 underline-offset-2 hover:underline"
         href="https://github.com/PriyanshuPz/poopmail"
       >

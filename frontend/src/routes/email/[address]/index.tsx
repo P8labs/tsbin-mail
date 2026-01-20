@@ -154,7 +154,39 @@ export default component$(() => {
             </div>
 
             <div class="rounded border-2 bg-[#1111]/80 p-4 sm:p-6">
-              <h2 class="mb-4 text-lg font-bold sm:text-xl">Messages</h2>
+              <div class="mb-4 flex items-start justify-between gap-4">
+                <h2 class="text-lg font-bold sm:text-xl">Messages</h2>
+                <button
+                  onClick$={() => {
+                    window.location.reload();
+                  }}
+                  class="flex h-9 items-center gap-2 border-2 px-3 py-1 text-sm transition-colors hover:bg-[#2222]/50 focus:ring-2 focus:ring-white focus:ring-offset-2 focus:outline-none active:bg-[#2222]/70"
+                  aria-label="Reload messages"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2" />
+                  </svg>
+                  Reload
+                </button>
+              </div>
+
+              <div class="mb-4 rounded border-2 border-blue-500/50 bg-blue-500/10 p-3">
+                <p class="text-xs sm:text-sm">
+                  <span class="font-semibold">Note:</span> Emails may take 5-10
+                  minutes to arrive. Click the reload button to check for new
+                  messages.
+                </p>
+              </div>
 
               {mailbox.value.data.messages &&
               mailbox.value.data.messages.length > 0 ? (

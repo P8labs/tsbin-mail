@@ -15,8 +15,9 @@ export default component$(() => {
             <div class="space-y-4">
               <p>
                 Poopmail is a temporary email service that allows you to create
-                disposable email addresses for testing, signing up for services,
-                or avoiding spam in your primary inbox.
+                disposable email addresses without registration. Perfect for
+                testing, signing up for services, or avoiding spam in your
+                primary inbox.
               </p>
 
               <p>
@@ -26,14 +27,42 @@ export default component$(() => {
               </p>
 
               <div class="mt-6 border-t-2 pt-4">
+                <h2 class="mb-3 text-xl font-semibold">Developer</h2>
+                <p>
+                  Poopmail is developed and maintained by{" "}
+                  <a
+                    href="https://github.com/PriyanshuPz"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold underline transition-colors hover:text-white/80"
+                  >
+                    Priyanshu Pz
+                  </a>
+                  .
+                </p>
+                <p class="mt-2">
+                  The project is open-source and available on{" "}
+                  <a
+                    href="https://github.com/PriyanshuPz/poopmail"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="font-semibold underline transition-colors hover:text-white/80"
+                  >
+                    GitHub
+                  </a>
+                  . Contributions, issues, and feedback are welcome!
+                </p>
+              </div>
+
+              <div class="mt-6 border-t-2 pt-4">
                 <h2 class="mb-3 text-xl font-semibold">Key Features</h2>
                 <ul class="space-y-2">
-                  <li>• Instant temporary email addresses</li>
-                  <li>• No registration or signup required</li>
-                  <li>• 24-hour automatic expiration</li>
-                  <li>• No data collection or tracking</li>
-                  <li>• Open-source and transparent</li>
-                  <li>• Simple, accessible interface</li>
+                  <li>Instant temporary email addresses</li>
+                  <li>No registration or signup required</li>
+                  <li>24-hour automatic expiration</li>
+                  <li>No data collection or tracking</li>
+                  <li>Open-source and transparent</li>
+                  <li>Simple, accessible interface</li>
                 </ul>
               </div>
 
@@ -54,16 +83,20 @@ export default component$(() => {
                   review, contribute to, or self-host. We believe in
                   transparency and community-driven development.
                 </p>
+                <p class="mt-2">
+                  Built with modern technologies: Qwik, Appwrite, Cloudflare
+                  Workers, and deployed on Vercel Edge.
+                </p>
               </div>
 
               <div class="mt-6 border-t-2 pt-4">
                 <h2 class="mb-3 text-xl font-semibold">Use Cases</h2>
                 <ul class="space-y-2">
-                  <li>• Testing email functionality in applications</li>
-                  <li>• Signing up for newsletters without spam</li>
-                  <li>• One-time verifications</li>
-                  <li>• Avoiding unwanted marketing emails</li>
-                  <li>• Quick disposable communication</li>
+                  <li>Testing email functionality in applications</li>
+                  <li>Signing up for newsletters without spam</li>
+                  <li>One-time verifications</li>
+                  <li>Avoiding unwanted marketing emails</li>
+                  <li>Quick disposable communication</li>
                 </ul>
               </div>
             </div>
