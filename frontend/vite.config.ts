@@ -22,21 +22,11 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 
 export default defineConfig(({ command, mode }): UserConfig => {
-  const commitHash =
-    process.env.VERCEL_GIT_COMMIT_SHA ||
-    (() => {
-      try {
-        return execSync("git rev-parse HEAD").toString().trim();
-      } catch {
-        return "unknown";
-      }
-    })();
-
+ 
   const buildTime = new Date().toISOString();
 
   return {
     define: {
-      "import.meta.env.PUBLIC_COMMIT_HASH": JSON.stringify(commitHash),
       "import.meta.env.PUBLIC_BUILD_TIME": JSON.stringify(buildTime),
     },
     plugins: [
