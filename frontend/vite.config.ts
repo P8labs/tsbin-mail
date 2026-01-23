@@ -8,6 +8,8 @@ import { qwikCity } from "@builder.io/qwik-city/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import pkg from "./package.json";
 import tailwindcss from "@tailwindcss/vite";
+import { execSync } from "child_process";
+
 type PkgDep = Record<string, string>;
 const { dependencies = {}, devDependencies = {} } = pkg as any as {
   dependencies: PkgDep;
@@ -20,7 +22,23 @@ errorOnDuplicatesPkgDeps(devDependencies, dependencies);
  */
 
 export default defineConfig(({ command, mode }): UserConfig => {
+  const commitHash =
+    process.env.VERCEL_GIT_COMMIT_SHA ||
+    (() => {
+      try {
+        return execSync("git rev-parse HEAD").toString().trim();
+      } catch {
+        return "unknown";
+      }
+    })();
+
+  const buildTime = new Date().toISOString();
+
   return {
+    define: {
+      "import.meta.env.PUBLIC_COMMIT_HASH": JSON.stringify(commitHash),
+      "import.meta.env.PUBLIC_BUILD_TIME": JSON.stringify(buildTime),
+    },
     plugins: [
       qwikCity(),
       qwikVite(),
