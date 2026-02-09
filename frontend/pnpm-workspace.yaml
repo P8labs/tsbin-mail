@@ -1,9 +1,0 @@
-ignoredBuiltDependencies:
-  - sharp
-
-onlyBuiltDependencies:
-  - '@parcel/watcher'
-  - deasync
-  - esbuild
-  - less
-  - vercel
